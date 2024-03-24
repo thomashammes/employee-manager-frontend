@@ -4,7 +4,7 @@ import {Employee} from "./employee/employee";
 import {EmployeeService} from "./employee/employee.service";
 import {HttpErrorResponse} from "@angular/common/http";
 import {CommonModule, NgForOf} from "@angular/common";
-import {FormsModule} from "@angular/forms";
+import {FormsModule, NgForm} from "@angular/forms";
 
 @Component({
   selector: 'app-root',
@@ -25,11 +25,25 @@ export class AppComponent implements OnInit {
 
   public getEmployees(): void {
     this.employeeService.getEmployees().subscribe({
-      next: (response: Employee[]) => { 
+      next: (response: Employee[]) => {
         console.log(response);
         this.employees = response;
       },
       error : (error: HttpErrorResponse) => {
+        alert(error.message);
+        console.error(error);
+      }
+    });
+  }
+
+  public onAddEmployee(addForm: NgForm): void {
+    document.getElementById("add-employee-form")!.click();
+    this.employeeService.addEmployees(addForm.value).subscribe({
+      next: (response: Employee) => {
+        console.log(response);
+        this.getEmployees();
+      },
+      error: (error: HttpErrorResponse) => {
         alert(error.message);
         console.error(error);
       }

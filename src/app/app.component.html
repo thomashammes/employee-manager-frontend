@@ -57,7 +57,7 @@
         </button>
       </div>
       <div class="modal-body">
-        <form #addForm="ngForm">
+        <form #addForm="ngForm" (ngSubmit)="onAddEmployee(addForm)">
           <div class="form-group">
             <label for="name">Name</label>
             <input type="text" ngModel name="name" class="form-control" placeholder="Name" required>
