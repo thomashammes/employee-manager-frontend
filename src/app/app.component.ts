@@ -3,13 +3,13 @@ import { RouterOutlet } from '@angular/router';
 import {Employee} from "./employee/employee";
 import {EmployeeService} from "./employee/employee.service";
 import {HttpErrorResponse} from "@angular/common/http";
-import {CommonModule, NgForOf} from "@angular/common";
+import {CommonModule, NgForOf, NgIf} from "@angular/common";
 import {FormsModule, NgForm} from "@angular/forms";
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, NgForOf, FormsModule],
+  imports: [RouterOutlet, NgForOf, FormsModule, NgIf],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
@@ -79,6 +79,22 @@ export class AppComponent implements OnInit {
         console.error(error);
       }
     });
+  }
+
+  public searchEmployees(key: string): void {
+    const results: Employee[] = [];
+    for (const employee of this.employees!) {
+      if (employee.name.toLowerCase().indexOf(key.toLowerCase()) !== -1 ||
+        employee.email.toLowerCase().indexOf(key.toLowerCase()) !== -1 ||
+        employee.phone.toLowerCase().indexOf(key.toLowerCase()) !== -1 ||
+        employee.jobTitle.toLowerCase().indexOf(key.toLowerCase()) !== -1) {
+        results.push(employee);
+      }
+    }
+    this.employees = results;
+    if (results.length === 0 || !key) {
+      this.getEmployees();
+    }
   }
 
   public onOpenModal(employee: Employee | null, mode: string): void {
