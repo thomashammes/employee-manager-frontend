@@ -15,7 +15,8 @@ import {FormsModule, NgForm} from "@angular/forms";
 })
 export class AppComponent implements OnInit {
   public employees: Employee[] | undefined;
-  title: string = "test";
+  public editEmployee: Employee | undefined | null;
+  public deleteEmployee: Employee | undefined | null;
 
   constructor(private employeeService: EmployeeService) { }
 
@@ -38,8 +39,38 @@ export class AppComponent implements OnInit {
 
   public onAddEmployee(addForm: NgForm): void {
     document.getElementById("add-employee-form")!.click();
-    this.employeeService.addEmployees(addForm.value).subscribe({
+    this.employeeService.addEmployee(addForm.value).subscribe({
       next: (response: Employee) => {
+        console.log(response);
+        this.getEmployees();
+        addForm.reset();
+      },
+      error: (error: HttpErrorResponse) => {
+        alert(error.message);
+        console.error(error);
+        addForm.reset();
+      }
+    });
+  }
+
+  public onUpdateEmployee(employee: Employee): void {
+    this.employeeService.updateEmployee(employee).subscribe({
+      next: (response: Employee) => {
+        console.log(response);
+        this.getEmployees();
+      },
+      error: (error: HttpErrorResponse) => {
+        alert(error.message);
+        console.error(error);
+      }
+    });
+  }
+
+  public onDeleteEmployee(employeeId: number | undefined): void {
+    console.log("onDeleteEmployee")
+    console.log(employeeId)
+    this.employeeService.deleteEmployee(employeeId).subscribe({
+      next: (response: void) => {
         console.log(response);
         this.getEmployees();
       },
@@ -64,10 +95,12 @@ export class AppComponent implements OnInit {
     }
     if (mode === "edit") {
       console.log("edit")
+      this.editEmployee = employee;
       button.setAttribute("data-target", "#updateEmployeeModal");
     }
     if (mode === "delete") {
       console.log("delete")
+      this.deleteEmployee = employee;
       button.setAttribute("data-target", "#deleteEmployeeModal");
     }
     mainContainer.appendChild(button);

@@ -17,7 +17,7 @@ export class EmployeeService {
     return this.http.get<Employee[]>(`${this.apiServerUrl}/employee/all`);
   }
 
-  public addEmployees(employee: Employee): Observable<Employee> {
+  public addEmployee(employee: Employee): Observable<Employee> {
     return this.http.post<Employee>(`${this.apiServerUrl}/employee/add`, employee);
   }
 
@@ -25,8 +25,9 @@ export class EmployeeService {
     return this.http.put<Employee>(`${this.apiServerUrl}/employee/update`, employee);
   }
 
-  public deleteEmployee(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiServerUrl}/employee/${id}`);
+  public deleteEmployee(id: number | undefined): Observable<void> {
+    console.log()
+    return this.http.delete<void>(`${this.apiServerUrl}/employee/delete/${id}`);
   }
 
 }
